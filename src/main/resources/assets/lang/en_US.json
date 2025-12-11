@@ -23,5 +23,14 @@
     "aegis:form.delete_region.title": "Delete Region",
     "aegis:form.delete_region.input.name": "Region Name",
     "aegis:form.delete_region.input.placeholder": "Enter region name to delete",
-    "aegis:form.list_regions.title": "Regions List"
+    "aegis:form.list_regions.title": "Regions List",
+    "aegis:command.info_tool_given": "&aYou received the region info tool!",
+    "aegis:tool.info.name": "&bRegion Info Tool",
+    "aegis:tool.info.lore": "&7Left click to check region info",
+    "aegis:info.no_region": "&eThere is no region here.",
+    "aegis:info.found": "&aRegion found: %s",
+    "aegis:form.info.title": "Region Info",
+    "aegis:form.info.region_name": "Region Name: %s",
+    "aegis:form.info.owners": "Owners: %s",
+    "aegis:form.info.members": "Members: %s"
 }

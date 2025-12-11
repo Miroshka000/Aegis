@@ -1,5 +1,6 @@
 package miroshka.aegis.listener;
 
+import miroshka.aegis.form.AegisForms;
 import miroshka.aegis.manager.RegionManager;
 import miroshka.aegis.manager.SelectionManager;
 import miroshka.aegis.region.Region;
@@ -20,9 +21,12 @@ public class AegisListener {
     private final RegionManager regionManager;
     private final SelectionManager selectionManager;
 
+    private final AegisForms aegisForms;
+
     public AegisListener(RegionManager regionManager, SelectionManager selectionManager) {
         this.regionManager = regionManager;
         this.selectionManager = selectionManager;
+        this.aegisForms = new AegisForms(regionManager, selectionManager);
     }
 
     @EventHandler
@@ -40,6 +44,13 @@ public class AegisListener {
                     (Vector3i) event.getBlock().getPosition());
             player.sendTip(Messages.get("command.select_pos1",
                     event.getBlock().getPosition().toString()));
+            return;
+        }
+
+        var extraTag = entityPlayer.getItemInHand().saveExtraTag();
+        if (extraTag.containsKey("BlockEntityTag")
+                && "info".equals(extraTag.getCompound("BlockEntityTag").getString("aegis_tool"))) {
+            event.setCancelled(true);
             return;
         }
 
@@ -84,6 +95,26 @@ public class AegisListener {
         Player player = entityPlayer.getController();
         if (player == null)
             return;
+
+        var extraTag = entityPlayer.getItemInHand().saveExtraTag();
+        if (extraTag.containsKey("BlockEntityTag")
+                && "info".equals(extraTag.getCompound("BlockEntityTag").getString("aegis_tool"))) {
+            event.setCancelled(true);
+            if (event.getAction() == PlayerInteractBlockEvent.Action.LEFT_CLICK ||
+                    event.getAction() == PlayerInteractBlockEvent.Action.RIGHT_CLICK) {
+
+                List<Region> regions = regionManager.getRegionsAt(info.getClickedBlock().getPosition());
+                if (regions.isEmpty()) {
+                    player.sendMessage(Messages.get("info.no_region"));
+                } else {
+                    for (Region region : regions) {
+                        player.sendMessage(Messages.get("info.found", region.getName()));
+                    }
+                }
+                aegisForms.openRegionInfo(player, regions);
+            }
+            return;
+        }
 
         if (entityPlayer.getItemInHand().getItemType() == ItemTypes.WOODEN_AXE) {
             event.setCancelled(true);

@@ -1,6 +1,5 @@
 package miroshka.aegis.form;
 
-
 import miroshka.aegis.manager.RegionManager;
 import miroshka.aegis.manager.SelectionManager;
 import miroshka.aegis.region.Region;
@@ -108,6 +107,28 @@ public class AegisForms {
         for (Region region : regionManager.getAllRegions()) {
             form.button(region.getName());
         }
+        player.viewForm(form);
+    }
+
+    public void openRegionInfo(Player player, java.util.List<Region> regions) {
+        StringBuilder content = new StringBuilder();
+
+        if (regions.isEmpty()) {
+            content.append(Messages.get("info.no_region"));
+        } else {
+            for (Region region : regions) {
+                content.append(Messages.get("form.info.region_name", region.getName())).append("\n");
+                content.append(Messages.get("form.info.owners", String.join(", ", region.getOwners()))).append("\n");
+                content.append(Messages.get("form.info.members", String.join(", ", region.getMembers())))
+                        .append("\n\n");
+            }
+        }
+
+        SimpleForm form = new SimpleForm()
+                .title(Messages.get("form.info.title"))
+                .content(content.toString());
+        form.button("OK");
+
         player.viewForm(form);
     }
 }

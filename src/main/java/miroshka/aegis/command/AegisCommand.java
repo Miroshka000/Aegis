@@ -11,6 +11,11 @@ import org.allaymc.api.command.tree.CommandTree;
 import org.allaymc.api.item.type.ItemTypes;
 import org.allaymc.api.player.Player;
 
+import org.allaymc.api.item.ItemStack;
+import org.cloudburstmc.nbt.NbtMap;
+
+import java.util.List;
+
 public class AegisCommand extends Command {
     private final RegionManager regionManager;
     private final SelectionManager selectionManager;
@@ -79,6 +84,20 @@ public class AegisCommand extends Command {
                 .exec((context, entity) -> {
                     entity.tryAddItem(ItemTypes.WOODEN_AXE.createItemStack());
                     context.addOutput(Messages.get("command.wand_given"));
+                    return context.success();
+                }, SenderType.ACTUAL_PLAYER)
+                .root()
+                .key("info")
+                .exec((context, entity) -> {
+                    ItemStack item = ItemTypes.STICK.createItemStack();
+                    item.setCustomName(Messages.get("tool.info.name"));
+                    item.setLore(List.of(Messages.get("tool.info.lore")));
+                    item.loadExtraTag(NbtMap.builder()
+                            .putCompound("BlockEntityTag", NbtMap.builder().putString("aegis_tool", "info").build())
+                            .build());
+
+                    entity.tryAddItem(item);
+                    context.addOutput(Messages.get("command.info_tool_given"));
                     return context.success();
                 }, SenderType.ACTUAL_PLAYER);
     }

@@ -23,5 +23,14 @@
     "aegis:form.delete_region.title": "Удалить регион",
     "aegis:form.delete_region.input.name": "Название региона",
     "aegis:form.delete_region.input.placeholder": "Введите название для удаления",
-    "aegis:form.list_regions.title": "Список регионов"
+    "aegis:form.list_regions.title": "Список регионов",
+    "aegis:command.info_tool_given": "&aВы получили инструмент проверки регионов!",
+    "aegis:tool.info.name": "&bИнструмент проверки регионов",
+    "aegis:tool.info.lore": "&7Нажмите ЛКМ чтобы проверить регион",
+    "aegis:info.no_region": "&eЗдесь нет регионов.",
+    "aegis:info.found": "&aРегион найден: %s",
+    "aegis:form.info.title": "Информация о регионе",
+    "aegis:form.info.region_name": "Название: %s",
+    "aegis:form.info.owners": "Владельцы: %s",
+    "aegis:form.info.members": "Участники: %s"
 }
