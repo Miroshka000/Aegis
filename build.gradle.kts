@@ -1,6 +1,6 @@
 plugins {
     id("java-library")
-    id("org.allaymc.gradle.plugin").version("0.1.2")
+    id("org.allaymc.gradle.plugin").version("0.2.1")
 }
 
 group = "miroshka.aegis"
@@ -9,16 +9,21 @@ description = "Aegis Regions For Allay"
 
 allay {
     api = "0.18.0"
-    apiOnly = false
+
+    apiOnly = true
+
+    server = null
     
+    generatePluginDescriptor = true
+
     plugin {
         entrance = "miroshka.aegis.Aegis"
         apiVersion = ">=0.18.0"
         authors += "Miroshka"
     }
+}
 
-    dependencies {
-        compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.34")
-        annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.34")
-    }
+dependencies {
+    compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.34")
+    annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.34")
 }

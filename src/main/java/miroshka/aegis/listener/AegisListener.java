@@ -36,6 +36,10 @@ public class AegisListener {
 
         if (entityPlayer.getItemInHand().getItemType() == ItemTypes.WOODEN_AXE) {
             event.setCancelled(true);
+            selectionManager.setPos1(player.getControlledEntity().getUniqueId(),
+                    (Vector3i) event.getBlock().getPosition());
+            player.sendTip(Messages.get("command.select_pos1",
+                    event.getBlock().getPosition().toString()));
             return;
         }
 

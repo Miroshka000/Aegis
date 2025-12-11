@@ -10,8 +10,6 @@ import org.allaymc.api.form.type.SimpleForm;
 import org.allaymc.api.item.type.ItemTypes;
 import org.allaymc.api.player.Player;
 
-import java.util.List;
-
 public class AegisForms {
     private final RegionManager regionManager;
     private final SelectionManager selectionManager;
