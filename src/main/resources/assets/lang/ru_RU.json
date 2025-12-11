@@ -32,5 +32,12 @@
     "aegis:form.info.title": "Информация о регионе",
     "aegis:form.info.region_name": "Название: %s",
     "aegis:form.info.owners": "Владельцы: %s",
-    "aegis:form.info.members": "Участники: %s"
+    "aegis:form.info.members": "Участники: %s",
+    "aegis:form.settings.title": "Настройки региона: %s",
+    "aegis:form.settings.button.delete": "Удалить регион",
+    "aegis:form.settings.button.back": "Назад",
+    "aegis:form.confirm_delete.title": "Подтверждение удаления",
+    "aegis:form.confirm_delete.content": "Вы уверенны, что хотите удалить регион %s?",
+    "aegis:form.button.yes": "Да",
+    "aegis:form.button.no": "Нет"
 }

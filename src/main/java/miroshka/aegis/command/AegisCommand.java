@@ -1,6 +1,7 @@
 package miroshka.aegis.command;
 
 import miroshka.aegis.form.AegisForms;
+import miroshka.aegis.manager.NameManager;
 import miroshka.aegis.manager.RegionManager;
 import miroshka.aegis.manager.SelectionManager;
 import miroshka.aegis.region.Region;
@@ -21,11 +22,11 @@ public class AegisCommand extends Command {
     private final SelectionManager selectionManager;
     private final AegisForms aegisForms;
 
-    public AegisCommand(RegionManager regionManager, SelectionManager selectionManager) {
+    public AegisCommand(RegionManager regionManager, SelectionManager selectionManager, NameManager nameManager) {
         super("aegis", "Aegis region management", null);
         this.regionManager = regionManager;
         this.selectionManager = selectionManager;
-        this.aegisForms = new AegisForms(regionManager, selectionManager);
+        this.aegisForms = new AegisForms(regionManager, selectionManager, nameManager);
         this.aliases.add("rg");
     }
 

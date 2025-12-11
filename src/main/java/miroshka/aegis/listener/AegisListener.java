@@ -1,6 +1,7 @@
 package miroshka.aegis.listener;
 
 import miroshka.aegis.form.AegisForms;
+import miroshka.aegis.manager.NameManager;
 import miroshka.aegis.manager.RegionManager;
 import miroshka.aegis.manager.SelectionManager;
 import miroshka.aegis.region.Region;
@@ -11,22 +12,27 @@ import org.allaymc.api.eventbus.EventHandler;
 import org.allaymc.api.eventbus.event.block.BlockBreakEvent;
 import org.allaymc.api.eventbus.event.block.BlockPlaceEvent;
 import org.allaymc.api.eventbus.event.player.PlayerInteractBlockEvent;
+import org.allaymc.api.eventbus.event.server.PlayerJoinEvent;
 import org.allaymc.api.item.type.ItemTypes;
 import org.allaymc.api.player.Player;
 import org.joml.Vector3i;
+
+import org.allaymc.api.math.position.Position3ic;
 
 import java.util.List;
 
 public class AegisListener {
     private final RegionManager regionManager;
     private final SelectionManager selectionManager;
+    private final NameManager nameManager;
 
     private final AegisForms aegisForms;
 
-    public AegisListener(RegionManager regionManager, SelectionManager selectionManager) {
+    public AegisListener(RegionManager regionManager, SelectionManager selectionManager, NameManager nameManager) {
         this.regionManager = regionManager;
         this.selectionManager = selectionManager;
-        this.aegisForms = new AegisForms(regionManager, selectionManager);
+        this.nameManager = nameManager;
+        this.aegisForms = new AegisForms(regionManager, selectionManager, nameManager);
     }
 
     @EventHandler
@@ -44,6 +50,7 @@ public class AegisListener {
                     (Vector3i) event.getBlock().getPosition());
             player.sendTip(Messages.get("command.select_pos1",
                     event.getBlock().getPosition().toString()));
+            resendBlock(player, event.getBlock().getPosition());
             return;
         }
 
@@ -51,6 +58,7 @@ public class AegisListener {
         if (extraTag.containsKey("BlockEntityTag")
                 && "info".equals(extraTag.getCompound("BlockEntityTag").getString("aegis_tool"))) {
             event.setCancelled(true);
+            resendBlock(player, event.getBlock().getPosition());
             return;
         }
 
@@ -60,6 +68,7 @@ public class AegisListener {
             if (!region.canBuild(player)) {
                 event.setCancelled(true);
                 player.sendTip(Messages.get("protection.break"));
+                resendBlock(player, event.getBlock().getPosition());
                 return;
             }
         }
@@ -80,6 +89,7 @@ public class AegisListener {
             if (!region.canBuild(player)) {
                 event.setCancelled(true);
                 player.sendTip(Messages.get("protection.place"));
+                resendBlock(player, event.getBlock().getPosition());
                 return;
             }
         }
@@ -140,6 +150,22 @@ public class AegisListener {
                 player.sendTip(Messages.get("protection.interact"));
                 return;
             }
+        }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        nameManager.addName(event.getPlayer().getLoginData().getUuid(), event.getPlayer().getOriginName());
+    }
+
+    private void resendBlock(Player player, Position3ic pos) {
+        if (pos.dimension() == null) {
+            return;
+        }
+        var blockState = pos.dimension().getBlockState(pos);
+        var chunk = pos.dimension().getChunkManager().getChunkByDimensionPos(pos.x(), pos.z());
+        if (chunk != null) {
+            chunk.setBlockState(pos.x() & 15, pos.y(), pos.z() & 15, blockState, 0, true);
         }
     }
 }
