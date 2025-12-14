@@ -2,6 +2,8 @@ package miroshka.aegis.region;
 
 import lombok.Getter;
 import lombok.Setter;
+import miroshka.aegis.flags.Flag;
+import miroshka.aegis.flags.FlagRegistry;
 import org.allaymc.api.math.position.Position3ic;
 import org.allaymc.api.player.Player;
 import org.joml.Vector3i;
@@ -45,9 +47,22 @@ public class Region {
     public boolean canBuild(Player player) {
         if (player.getControlledEntity() == null)
             return false;
+        if (player.getControlledEntity().hasPermission("aegis.admin").asBoolean())
+            return true;
+        if (isMember(player))
+            return true;
+
+        return getFlag(FlagRegistry.BUILD);
+    }
+
+    public boolean isMember(Player player) {
         String uuid = player.getControlledEntity().getUniqueId().toString();
-        return owners.contains(uuid) || members.contains(uuid)
-                || player.getControlledEntity().hasPermission("aegis.admin").asBoolean();
+        return owners.contains(uuid) || members.contains(uuid);
+    }
+
+    public boolean isOwner(Player player) {
+        String uuid = player.getControlledEntity().getUniqueId().toString();
+        return owners.contains(uuid);
     }
 
     public void addOwner(String uuid) {
@@ -70,7 +85,24 @@ public class Region {
         flags.put(flag, value);
     }
 
+    public <T> void setFlag(Flag<T> flag, T value) {
+        flags.put(flag.getName(), flag.serialize(value));
+    }
+
     public Object getFlag(String flag) {
         return flags.get(flag);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getFlag(Flag<T> flag) {
+        Object display = flags.get(flag.getName());
+        if (display == null) {
+            return flag.getDefaultValue();
+        }
+        try {
+            return flag.parse(display);
+        } catch (Exception e) {
+            return flag.getDefaultValue();
+        }
     }
 }

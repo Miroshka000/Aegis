@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "miroshka.aegis"
-version = "1.0.1"
+version = "1.0.2"
 description = "Aegis Regions For Allay"
 
 allay {

@@ -10,6 +10,7 @@ import java.util.UUID;
 public class NameManager {
     private final File file;
     private final Map<UUID, String> names = new HashMap<>();
+    private final Map<String, UUID> uuids = new HashMap<>();
 
     public NameManager(File dataFolder) {
         this.file = new File(dataFolder, "names.dat");
@@ -18,6 +19,7 @@ public class NameManager {
 
     public void addName(UUID uuid, String name) {
         names.put(uuid, name);
+        uuids.put(name.toLowerCase(), uuid);
     }
 
     public String getName(UUID uuid) {
@@ -28,9 +30,14 @@ public class NameManager {
         if (player != null) {
             String name = player.getOriginName();
             names.put(uuid, name);
+            uuids.put(name.toLowerCase(), uuid);
             return name;
         }
         return uuid.toString();
+    }
+
+    public UUID getUUID(String name) {
+        return uuids.get(name.toLowerCase());
     }
 
     public String getName(String uuidStr) {
@@ -63,7 +70,9 @@ public class NameManager {
                 long most = in.readLong();
                 long least = in.readLong();
                 String name = in.readUTF();
-                names.put(new UUID(most, least), name);
+                UUID uuid = new UUID(most, least);
+                names.put(uuid, name);
+                uuids.put(name.toLowerCase(), uuid);
             }
         } catch (IOException e) {
             e.printStackTrace();
