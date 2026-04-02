@@ -1,7 +1,11 @@
 package miroshka.aegis.region;
 
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import miroshka.aegis.flags.Flag;
 import miroshka.aegis.flags.FlagRegistry;
 import org.allaymc.api.math.position.Position3ic;
@@ -14,17 +18,20 @@ import java.util.Map;
 import java.util.Set;
 
 @Getter
+@ToString
+@EqualsAndHashCode(of = {"name", "worldName"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Region {
-    private final String name;
-    private final Vector3i min;
-    private final Vector3i max;
-    private final String worldName;
+    final String name;
+    final Vector3i min;
+    final Vector3i max;
+    final String worldName;
     @Setter
-    private int priority;
+    int priority;
 
-    private final Set<String> owners = new HashSet<>();
-    private final Set<String> members = new HashSet<>();
-    private final Map<String, Object> flags = new HashMap<>();
+    final Set<String> owners = new HashSet<>();
+    final Set<String> members = new HashSet<>();
+    final Map<String, Object> flags = new HashMap<>();
 
     public Region(String name, Vector3i p1, Vector3i p2, String worldName, int priority) {
         this.name = name;

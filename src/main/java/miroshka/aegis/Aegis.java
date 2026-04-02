@@ -1,6 +1,12 @@
 package miroshka.aegis;
 
+import eu.okaeri.configs.ConfigManager;
+import eu.okaeri.configs.yaml.snakeyaml.YamlSnakeYamlConfigurer;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import miroshka.aegis.command.AegisCommand;
+import miroshka.aegis.config.AegisConfig;
 import miroshka.aegis.listener.AegisListener;
 import miroshka.aegis.manager.NameManager;
 import miroshka.aegis.manager.RegionManager;
@@ -12,23 +18,29 @@ import org.allaymc.api.server.Server;
 
 import java.io.File;
 
+@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Aegis extends Plugin {
-    private StorageManager storageManager;
-    private NameManager nameManager;
+    StorageManager storageManager;
+    NameManager nameManager;
+    RegionManager regionManager;
+    SelectionManager selectionManager;
+    AegisConfig config;
 
     @Override
     public void onEnable() {
-        RegionManager regionManager = new RegionManager();
-        SelectionManager selectionManager = new SelectionManager();
         File dataFolder = getPluginContainer().dataFolder().toFile();
+        regionManager = new RegionManager();
+        config = loadConfig();
+        selectionManager = new SelectionManager(config);
         storageManager = new StorageManager(regionManager, dataFolder);
         nameManager = new NameManager(dataFolder);
 
         storageManager.load();
 
         Server.getInstance().getEventBus()
-                .registerListener(new AegisListener(regionManager, selectionManager, nameManager));
-        Registries.COMMANDS.register(new AegisCommand(regionManager, selectionManager, nameManager));
+                .registerListener(new AegisListener(regionManager, selectionManager, nameManager, config));
+        Registries.COMMANDS.register(new AegisCommand(regionManager, selectionManager, nameManager, config));
     }
 
     @Override
@@ -39,5 +51,14 @@ public class Aegis extends Plugin {
         if (nameManager != null) {
             nameManager.save();
         }
+    }
+
+    private AegisConfig loadConfig() {
+        return (AegisConfig) ConfigManager.create(AegisConfig.class, initializer -> {
+            initializer.withConfigurer(new YamlSnakeYamlConfigurer());
+            initializer.withBindFile(getPluginContainer().dataFolder().resolve("config.yml"));
+            initializer.saveDefaults();
+            initializer.load(true);
+        });
     }
 }
