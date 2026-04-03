@@ -54,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Aegis-${{ steps.get_version.outputs.VERSION }}
-          path: build/libs/Aegis-*.jar
+          path: build/libs/Aegis.jar
 
   release:
     needs: build
