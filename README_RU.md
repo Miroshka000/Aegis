@@ -5,7 +5,7 @@
 **Продвинутая система управления регионами для Allay**
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Version](https://img.shields.io/badge/Version-1.0.0-green.svg)
+![Version](https://img.shields.io/badge/Version-1.0.3-green.svg)
 ![Platform](https://img.shields.io/badge/Platform-Allay-orange.svg)
 
 <br>
